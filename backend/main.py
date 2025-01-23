@@ -1,7 +1,10 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 import os
+import uuid
+import shutil
+from basic_process import parse_pdf_to_json
 from pathlib import Path
 
 app = FastAPI()
@@ -13,6 +16,19 @@ app.mount(
     StaticFiles(directory=Path(__file__).parent.parent / "frontend" / "build" / "static"),
     name="static",
 )
+
+@app.post("/upload-pdf")
+async def upload_pdf(file: UploadFile = File(...)):
+    # Save temporarily
+    temp_filename = f"/tmp/{uuid.uuid4()}.pdf"
+    with open(temp_filename, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # Parse with tabula
+    records = parse_pdf_to_json(temp_filename)
+
+    # Return the structured data
+    return {"parsedData": records}
 
 # 2) Optional: define some API endpoints
 @app.get("/api/hello")
