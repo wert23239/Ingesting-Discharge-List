@@ -16,3 +16,4 @@ class Record(Base):
     )
     added_at = Column(DateTime, server_default=func.now())
     verified_by = Column(Text, nullable=True)  # Null if not verified
+    verified_at = Column(DateTime, nullable=True)  # Null if not verified

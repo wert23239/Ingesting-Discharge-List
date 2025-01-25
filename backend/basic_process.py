@@ -39,8 +39,24 @@ def parse_pdf_to_json(pdf_path: str):
                   record[key] = None
     return records
 
-if __name__ == "__main__":
-    pdf_file = "discharge_list.pdf"
-    output = parse_pdf_to_json(pdf_file)
-    # Print or process
-    print(output)
+def is_record_complete(record: dict):
+    return (
+        "Name" in record and record["Name"]
+        and "EpicId" in record and record["EpicId"]
+        and "PhoneNumber" in record and record["PhoneNumber"]
+        and "Insurance" in record and record["Insurance"]
+    )
+
+def parse_and_label_record(raw_record: dict):
+    # Normalize keys if needed (lowercase, etc.)
+    # record = {k.lower(): v for k, v in raw_record.items()}
+
+
+    # Decide status
+    print(raw_record,is_record_complete(raw_record))
+    if is_record_complete(raw_record):
+        print("passed")
+        raw_record["Status"] = "non-verified"   # all fields present
+    else:
+        raw_record["Status"] = "needs_review"   # some fields missing or invalid
+    return raw_record

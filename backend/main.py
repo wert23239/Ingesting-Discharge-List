@@ -7,7 +7,7 @@ import os
 import uuid
 import shutil
 from pathlib import Path
-from basic_process import parse_pdf_to_json
+from basic_process import parse_pdf_to_json, parse_and_label_record
 from db import engine, Base, get_db
 from crud import create_record, get_records, update_record_status
 from schemas import VerifyRequest
@@ -38,7 +38,7 @@ def mark_record_as_verified(
     request: VerifyRequest,
     db: Session = Depends(get_db)
 ):
-    record = update_record_status(db, record_id, "verified", request.verified_by)
+    record = update_record_status(db, record_id, request.status, request.verified_by)
     if not record:
         raise HTTPException(status_code=404, detail="Record not found")
     return record
@@ -63,12 +63,14 @@ async def upload_pdf(file: UploadFile = File(...), db: Session = Depends(get_db)
         records = parse_pdf_to_json(temp_filename)
 
         # Save records to the database
-        for record in records:
-          name = record.get("Name", "Unknown")
-          epic_id = record.get("EpicId","Unknown")
-          phone_number = record.get("PhoneNumber","Unknown")
-          insurance = record.get("Insurance","Unknown")
-          create_record(db, name, epic_id, phone_number,insurance)
+        for raw_record in records:
+          labeled = parse_and_label_record(raw_record)  # either 'non-verified' or 'needs_review'
+          name = labeled.get("Name", "Unknown")
+          epic_id = labeled.get("EpicId","Unknown")
+          phone_number = labeled.get("PhoneNumber","Unknown")
+          insurance = labeled.get("Insurance","Unknown")
+          status = labeled.get("Status","needs_review")
+          create_record(db, name, epic_id, phone_number,insurance,status)
 
         return {"message": f"Successfully uploaded and saved {len(records)} records."}
     except Exception as e:
