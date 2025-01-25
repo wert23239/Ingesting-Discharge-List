@@ -26,25 +26,12 @@ function FileUploadPage() {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="container">
       <h2>Upload Discharge PDF</h2>
       <input type="file" accept="application/pdf" onChange={handleFileUpload} />
-      <p style={styles.status}>{uploadStatus}</p>
+      <p className="upload-status">{uploadStatus}</p>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    padding: "2rem",
-    fontFamily: "'Poppins', sans-serif",
-    textAlign: "center",
-  },
-  status: {
-    marginTop: "1rem",
-    fontWeight: "bold",
-    color: "green",
-  },
-};
 
 export default FileUploadPage;
