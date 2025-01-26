@@ -29,7 +29,7 @@ function FileUploadPage() {
     <div className="container">
       <h2>Upload Discharge PDF</h2>
       <input type="file" accept="application/pdf" onChange={handleFileUpload} />
-      <p className="upload-status">{uploadStatus}</p>
+      <p className="uploadstatus">{uploadStatus}</p>
     </div>
   );
 }

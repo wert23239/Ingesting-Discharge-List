@@ -9,8 +9,8 @@
 
   /* Row highlight colors */
   --color-verified: #d4edda; /* light green */
-  --color-non-verified: #f8d7da; /* light red */
-  --color-needs-review: #fff3cd; /* light yellow */
+  --color-non-verified: #fff3cd; /* light red */
+  --color-needs-review: #f8d7da; /* light yellow */
 }
 
 /* Global resets & fonts */
@@ -94,10 +94,10 @@ select {
   font: inherit;
 }
 /* Upload Status */
-.upload-status {
-  margin-top: "1rem";
-  font-weight: "bold";
-  color: "green";
+.uploadstatus {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: green;
 }
 
 /* Nav bar */
