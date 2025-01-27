@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import VerificationRow from "./VerificationRow";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function VerificationPage() {
   const [goodRecords, setGoodRecords] = useState([]);
   const [reviewRecords, setReviewRecords] = useState([]);
@@ -8,13 +10,13 @@ function VerificationPage() {
 
   useEffect(() => {
     // 1) Fetch "non-verified" records
-    fetch("http://localhost:8000/records/?status=non-verified")
+    fetch(`${API_BASE_URL}/records/?status=non-verified`)
       .then((res) => res.json())
       .then((data) => setGoodRecords(data))
       .catch((err) => console.error("Error fetching non-verified:", err));
 
     // 2) Fetch "needs_review" records
-    fetch("http://localhost:8000/records/?status=needs_review")
+    fetch(`${API_BASE_URL}/records/?status=needs_review`)
       .then((res) => res.json())
       .then((data) => setReviewRecords(data))
       .catch((err) => console.error("Error fetching needs_review:", err));
@@ -24,7 +26,7 @@ function VerificationPage() {
   const updateRecord = async (recordId, updatedFields) => {
     try {
       console.log(updatedFields);
-      await fetch(`http://localhost:8000/records/${recordId}`, {
+      await fetch(`${API_BASE_URL}/${recordId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedFields),

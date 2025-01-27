@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function FinalizedListPage() {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     // Fetch records that are "verified"
-    fetch("http://localhost:8000/records/?status=verified")
+    fetch(`${API_BASE_URL}/records/?status=verified`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched verified records:", data);
@@ -20,7 +22,7 @@ function FinalizedListPage() {
   const handleSendBack = async (recordId, verified_by) => {
     try {
       // Call your PUT endpoint with status=needs_review
-      await fetch(`http://localhost:8000/records/${recordId}`, {
+      await fetch(`${API_BASE_URL}/${recordId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

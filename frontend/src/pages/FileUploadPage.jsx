@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; // http://localhost:8000 locally
+console.log(API_BASE_URL);
+
 function FileUploadPage() {
   const [uploadStatus, setUploadStatus] = useState("");
 
@@ -11,7 +14,7 @@ function FileUploadPage() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/upload-pdf", {
+      const response = await fetch(`${API_BASE_URL}/upload-pdf`, {
         method: "POST",
         body: formData,
       });

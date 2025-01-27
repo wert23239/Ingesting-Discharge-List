@@ -11,9 +11,19 @@ from basic_process import parse_pdf_to_json, parse_and_label_record
 from db import engine, Base, get_db
 from crud import create_record, get_records, update_record_status
 from schemas import VerifyRequest
+from dotenv import load_dotenv
+import os
 
+load_dotenv()  # Load .env file
+
+IS_LOCAL = os.getenv("IS_LOCAL", "false").lower() == "true"
 
 app = FastAPI()
+
+if IS_LOCAL:
+    print("Running in local mode!")
+else:
+    print("Running in production mode!")
 
 # Initialize the database schema
 Base.metadata.create_all(bind=engine)
