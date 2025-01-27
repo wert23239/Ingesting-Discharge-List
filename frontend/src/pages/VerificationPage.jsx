@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import VerificationRow from "./VerificationRow";
 
 function VerificationPage() {
   const [goodRecords, setGoodRecords] = useState([]);
@@ -6,45 +7,40 @@ function VerificationPage() {
   const [currentVerifier, setCurrentVerifier] = useState("Alex");
 
   useEffect(() => {
-    // "Good" records
+    // 1) Fetch "non-verified" records
     fetch("http://localhost:8000/records/?status=non-verified")
       .then((res) => res.json())
-      .then((data) => setGoodRecords(data));
+      .then((data) => setGoodRecords(data))
+      .catch((err) => console.error("Error fetching non-verified:", err));
 
-    // "Needs Review" records
+    // 2) Fetch "needs_review" records
     fetch("http://localhost:8000/records/?status=needs_review")
       .then((res) => res.json())
-      .then((data) => setReviewRecords(data));
+      .then((data) => setReviewRecords(data))
+      .catch((err) => console.error("Error fetching needs_review:", err));
   }, []);
 
-  // Handler to update record status
-  const handleStatusChange = async (recordId, newStatus) => {
+  // PUT request to update a record's fields in the backend
+  const updateRecord = async (recordId, updatedFields) => {
     try {
+      console.log(updatedFields);
       await fetch(`http://localhost:8000/records/${recordId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status: newStatus,
-          verified_by: currentVerifier,
-        }),
+        body: JSON.stringify(updatedFields),
       });
-      // Locally update the correct array
+
+      // If status changes from non-verified -> verified, remove from goodRecords
+      // Or if from needs_review -> verified, remove from reviewRecords, etc.
+      // For now, we just update local arrays in place:
       setGoodRecords((prev) =>
-        prev.map((record) =>
-          record.id === recordId
-            ? { ...record, status: newStatus, verified_by: currentVerifier }
-            : record
-        )
+        prev.map((r) => (r.id === recordId ? { ...r, ...updatedFields } : r))
       );
       setReviewRecords((prev) =>
-        prev.map((record) =>
-          record.id === recordId
-            ? { ...record, status: newStatus, verified_by: currentVerifier }
-            : record
-        )
+        prev.map((r) => (r.id === recordId ? { ...r, ...updatedFields } : r))
       );
     } catch (error) {
-      console.error("Error updating record status:", error);
+      console.error("Error updating record:", error);
     }
   };
 
@@ -68,60 +64,66 @@ function VerificationPage() {
         </select>
       </div>
 
-      {/* Probably Good Table */}
+      {/* "Probably Good" Table */}
       <h3>Probably Good</h3>
       {goodRecords.length === 0 ? (
         <p className="no-records">No complete records found.</p>
       ) : (
-        <Table rows={goodRecords} onStatusChange={handleStatusChange} />
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Epic ID</th>
+              <th>Phone Number</th>
+              <th>Insurance</th>
+              <th>Status</th>
+              <th>Verified By</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {goodRecords.map((record) => (
+              <VerificationRow
+                key={record.id}
+                record={record}
+                currentVerifier={currentVerifier}
+                onUpdate={updateRecord}
+              />
+            ))}
+          </tbody>
+        </table>
       )}
 
-      {/* Needs Review Table */}
+      {/* "Needs More Review" Table */}
       <h3>Needs More Review</h3>
       {reviewRecords.length === 0 ? (
         <p className="no-records">No incomplete records.</p>
       ) : (
-        <Table rows={reviewRecords} onStatusChange={handleStatusChange} />
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Epic ID</th>
+              <th>Phone Number</th>
+              <th>Insurance</th>
+              <th>Status</th>
+              <th>Verified By</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reviewRecords.map((record) => (
+              <VerificationRow
+                key={record.id}
+                record={record}
+                currentVerifier={currentVerifier}
+                onUpdate={updateRecord}
+              />
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
-  );
-}
-
-function Table({ rows, onStatusChange }) {
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Epic Id</th>
-          <th>Phone Number</th>
-          <th>Insurance</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((record) => (
-          <tr key={record.id} className={record.status}>
-            <td>{record.name}</td>
-            <td>{record.epic_id || record.EpicId}</td>
-            <td>{record.phone_number || record.PhoneNumber}</td>
-            <td>{record.insurance}</td>
-            <td>{record.status}</td>
-            <td>
-              <select
-                value={record.status}
-                onChange={(e) => onStatusChange(record.id, e.target.value)}
-              >
-                <option value="verified">Mark Verified</option>
-                <option value="non-verified">Non-Verified</option>
-                <option value="needs_review">Needs Review</option>
-              </select>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
   );
 }
 
