@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, Request, File, UploadFile
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from models import Record
@@ -20,19 +21,40 @@ IS_LOCAL = os.getenv("IS_LOCAL", "false").lower() == "true"
 
 app = FastAPI()
 
-if IS_LOCAL:
-    print("Running in local mode!")
-else:
-    print("Running in production mode!")
+# Initialize the database schema
+Base.metadata.create_all(bind=engine)
 
 # Initialize the database schema
 Base.metadata.create_all(bind=engine)
 
-app.mount(
-    "/static",
-    StaticFiles(directory=Path(__file__).parent.parent / "frontend" / "build" / "static"),
-    name="static",
+# Check if running in local development
+IS_LOCAL = os.getenv("IS_LOCAL", "true").lower() == "true"
+
+# CORS configuration
+# Allow the frontend (React) to communicate with the backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",  # React development server
+        "https://your-frontend-site.onrender.com",  # Render Static Site
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+
+# Serve React app during local development
+if IS_LOCAL:
+    print("Running in local development mode. Serving React app...")
+    app.mount(
+        "/static",
+        StaticFiles(directory=Path(__file__).parent.parent / "frontend" / "build" / "static"),
+        name="static",
+    )
+
+    @app.get("/")
+    def serve_frontend():
+        return FileResponse(Path(__file__).parent.parent / "frontend" / "build" / "index.html")
 
 @app.post("/records/")
 def add_record(name: str, epic_id: str, phone_number: str, db: Session = Depends(get_db)):
