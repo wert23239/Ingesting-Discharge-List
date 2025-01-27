@@ -36,7 +36,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # React development server
-        "https://ingesting-discharge-list-1.onrender.com/",  # Render Static Site
+        "https://ingesting-discharge-list-1.onrender.com",  # Render Static Site
     ],
     allow_credentials=True,
     allow_methods=["*"],
