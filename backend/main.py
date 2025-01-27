@@ -21,12 +21,6 @@ IS_LOCAL = os.getenv("IS_LOCAL", "false").lower() == "true"
 
 app = FastAPI()
 
-# Initialize the database schema
-Base.metadata.create_all(bind=engine)
-
-# Initialize the database schema
-Base.metadata.create_all(bind=engine)
-
 # Check if running in local development
 IS_LOCAL = os.getenv("IS_LOCAL", "true").lower() == "true"
 
