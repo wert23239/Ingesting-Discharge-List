@@ -3,4 +3,7 @@
 .env.local
 .env.*.local
 
+# Alembic migration files (optional: if you regenerate often and don’t want older revisions)
+alembic/versions/*.pyc
 
+venv/

@@ -56,6 +56,10 @@ if IS_LOCAL:
     def serve_frontend():
         return FileResponse(Path(__file__).parent.parent / "frontend" / "build" / "index.html")
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.post("/records/")
 def add_record(name: str, epic_id: str, phone_number: str, db: Session = Depends(get_db)):
     return create_record(db, name, epic_id, phone_number)
