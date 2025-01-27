@@ -26,7 +26,7 @@ function VerificationPage() {
   const updateRecord = async (recordId, updatedFields) => {
     try {
       console.log(updatedFields);
-      await fetch(`${API_BASE_URL}/${recordId}`, {
+      await fetch(`${API_BASE_URL}/records/${recordId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedFields),

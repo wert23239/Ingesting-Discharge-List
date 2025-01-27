@@ -22,7 +22,7 @@ function FinalizedListPage() {
   const handleSendBack = async (recordId, verified_by) => {
     try {
       // Call your PUT endpoint with status=needs_review
-      await fetch(`${API_BASE_URL}/${recordId}`, {
+      await fetch(`${API_BASE_URL}/records/${recordId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
