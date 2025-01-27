@@ -33,12 +33,13 @@ def fetch_records(status: str = None, db: Session = Depends(get_db)):
     return get_records(db, status)
 
 @app.put("/records/{record_id}")
-def mark_record_as_verified(
+def update_record(
     record_id: int,
     request: VerifyRequest,
     db: Session = Depends(get_db)
 ):
-    record = update_record_status(db, record_id, request.status, request.verified_by)
+    print("update_record")
+    record = update_record_status(db, record_id, request)
     if not record:
         raise HTTPException(status_code=404, detail="Record not found")
     return record
