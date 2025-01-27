@@ -19,12 +19,6 @@ load_dotenv()  # Load .env file
 
 IS_LOCAL = os.getenv("IS_LOCAL", "false").lower() == "true"
 
-if "JAVA_HOME" in os.environ:
-    java_home = os.environ["JAVA_HOME"]
-    os.environ["PATH"] = f"{java_home}/bin:" + os.environ["PATH"]
-print("JAVA_HOME:", os.getenv("JAVA_HOME"))
-print("PATH:", os.getenv("PATH"))
-
 app = FastAPI()
 
 # Check if running in local development
