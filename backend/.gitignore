@@ -7,3 +7,5 @@
 alembic/versions/*.pyc
 
 venv/
+
+.DS_STORE
