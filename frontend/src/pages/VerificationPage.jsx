@@ -62,7 +62,6 @@ function VerificationPage() {
           <option value="Hekmat">Hekmat</option>
           <option value="Salman">Salman</option>
           <option value="Ablimit">Ablimit</option>
-          <option value="Cutie">Diana</option>
         </select>
       </div>
 
@@ -78,6 +77,7 @@ function VerificationPage() {
               <th>Epic ID</th>
               <th>Phone Number</th>
               <th>Insurance</th>
+              <th>Provider</th>
               <th>Status</th>
               <th>Verified By</th>
               <th>Action</th>
@@ -108,6 +108,7 @@ function VerificationPage() {
               <th>Epic ID</th>
               <th>Phone Number</th>
               <th>Insurance</th>
+              <th>Provider</th>
               <th>Status</th>
               <th>Verified By</th>
               <th>Action</th>

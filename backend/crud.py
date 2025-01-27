@@ -4,9 +4,9 @@ import datetime
 from schemas import VerifyRequest
 
 
-def create_record(db: Session, name: str, epic_id: str, phone_number: str, insurance: str, status:str):
+def create_record(db: Session, name: str, epic_id: str, phone_number: str, insurance: str, provider: str,status:str):
     print("create record")
-    new_record = Record(name=name, epic_id=epic_id, phone_number=phone_number, insurance=insurance, status=status)
+    new_record = Record(name=name, epic_id=epic_id, phone_number=phone_number, insurance=insurance, provider=provider, status=status)
     db.add(new_record)
     db.commit()
     db.refresh(new_record)

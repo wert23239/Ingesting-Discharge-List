@@ -42,6 +42,7 @@ function VerificationRow({ record, currentVerifier, onUpdate }) {
       epic_id: record.epic_id || record.EpicId || "",
       phone_number: record.phone_number || record.PhoneNumber || "",
       insurance: record.insurance || "",
+      provider: record.provider || "",
       status: record.status || "non-verified",
     });
     setIsEditing(false);
@@ -94,6 +95,19 @@ function VerificationRow({ record, currentVerifier, onUpdate }) {
           />
         ) : (
           record.insurance
+        )}
+      </td>
+
+      {/* Provider */}
+      <td>
+        {isEditing ? (
+          <input
+            name="provider"
+            value={localData.provider}
+            onChange={handleChange}
+          />
+        ) : (
+          record.provider
         )}
       </td>
 

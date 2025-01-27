@@ -8,7 +8,7 @@ import os
 import uuid
 import shutil
 from pathlib import Path
-from basic_process import parse_pdf_to_json, parse_and_label_record
+from basic_process import parse_pdf_to_json, parse_and_label_record, validate_phone_number, validate_insurance, validate_provider
 from db import engine, Base, get_db
 from crud import create_record, get_records, update_record_status
 from schemas import VerifyRequest
@@ -62,6 +62,30 @@ def add_record(name: str, epic_id: str, phone_number: str, db: Session = Depends
 def fetch_records(status: str = None, db: Session = Depends(get_db)):
     return get_records(db, status)
 
+@app.get("/records/finalized")
+def get_finalized_records(db: Session = Depends(get_db)):
+    records = get_records(db, "verified")
+
+    validated_records = []
+    for record in records:
+        phone_validation = validate_phone_number(record.phone_number)
+        validated_records.append({
+            "id": record.id,
+            "name": record.name,
+            "epic_id": record.epic_id,
+            "phone_number": phone_validation["formatted"],
+            "phone_valid": phone_validation["valid"],
+            "insurance": record.insurance,
+            "insurance_valid": validate_insurance(record.insurance),
+            "provider": record.provider,
+            "provider_valid": validate_provider(record.provider),
+            "status": record.status,
+            "verified_by": record.verified_by,
+            "verified_at": record.verified_at,
+        })
+
+    return {"records": validated_records}
+
 @app.put("/records/{record_id}")
 def update_record(
     record_id: int,
@@ -100,8 +124,9 @@ async def upload_pdf(file: UploadFile = File(...), db: Session = Depends(get_db)
           epic_id = labeled.get("EpicId","Unknown")
           phone_number = labeled.get("PhoneNumber","Unknown")
           insurance = labeled.get("Insurance","Unknown")
+          provider = labeled.get("PrimaryCareProvider", "Unknown")
           status = labeled.get("Status","needs_review")
-          create_record(db, name, epic_id, phone_number,insurance,status)
+          create_record(db, name, epic_id, phone_number,insurance,provider,status)
 
         return {"message": f"Successfully uploaded and saved {len(records)} records."}
     except Exception as e:

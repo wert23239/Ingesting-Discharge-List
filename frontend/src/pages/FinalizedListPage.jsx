@@ -7,12 +7,11 @@ function FinalizedListPage() {
 
   useEffect(() => {
     // Fetch records that are "verified"
-    fetch(`${API_BASE_URL}/records/?status=verified`)
+    fetch(`${API_BASE_URL}/records/finalized`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched verified records:", data);
-        setRecords(data);
-        console.log(data);
+        setRecords(data.records);
       })
       .catch((error) =>
         console.error("Error fetching verified records:", error)
@@ -54,18 +53,34 @@ function FinalizedListPage() {
               <th>Epic ID</th>
               <th>Phone Number</th>
               <th>Insurance</th>
+              <th>Provider</th>
               <th>Status</th>
               <th>Verified By</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {records.map((record, index) => (
-              <tr key={index} className="finalized">
+            {records.map((record) => (
+              <tr key={record.id}>
                 <td>{record.name}</td>
                 <td>{record.epic_id}</td>
-                <td>{record.phone_number}</td>
-                <td>{record.insurance}</td>
+                {/* Phone Number Column */}
+                <td>
+                  {record.phone_number || "No Number"}
+                  {record.phone_valid ? " ✅" : " ❌"}
+                </td>
+
+                {/* Insurance Column */}
+                <td>
+                  {record.insurance || "No Insurance"}
+                  {record.insurance_valid ? " ✅" : " ❌"}
+                </td>
+
+                {/* Provider Column */}
+                <td>
+                  {record.provider || "No Provider"}
+                  {record.provider_valid ? " ✅" : " ❌"}
+                </td>
                 <td>{record.status}</td>
                 <td style={{ fontSize: "0.9rem" }}>
                   {record.verified_by || "—"}

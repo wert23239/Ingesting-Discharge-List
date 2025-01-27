@@ -10,6 +10,7 @@ class Record(Base):
     epic_id = Column(String, nullable=True)
     phone_number = Column(String, nullable=True)
     insurance = Column(String, nullable=True)
+    provider = Column(String, nullable=True)
     status = Column(String, default="non-verified" # Possible values: 'verified', 'non-verified', 'needs_review'
     )
     verified_by = Column(String, nullable=True)

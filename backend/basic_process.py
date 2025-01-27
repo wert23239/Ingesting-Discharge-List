@@ -1,4 +1,4 @@
-
+import phonenumbers
 
 def parse_pdf_to_json(pdf_path: str):
     """
@@ -70,3 +70,28 @@ def parse_and_label_record(raw_record: dict):
     else:
         raw_record["Status"] = "needs_review"   # some fields missing or invalid
     return raw_record
+
+def validate_phone_number(phone_number: str, region: str = "US"):
+    """
+    Validate and format a phone number.
+    Args:
+        phone_number (str): The raw phone number.
+        region (str): Default region for parsing (e.g., "US").
+    Returns:
+        dict: {"valid": bool, "formatted": str or None}
+    """
+    try:
+        parsed = phonenumbers.parse(phone_number, region)
+        is_valid = phonenumbers.is_valid_number(parsed)
+        formatted_number = phonenumbers.format_number(
+            parsed, phonenumbers.PhoneNumberFormat.E164
+        )
+        return {"valid": is_valid, "formatted": formatted_number}
+    except phonenumbers.NumberParseException:
+        return {"valid": False, "formatted": None}
+
+def validate_insurance(insurance: str):
+    return bool(insurance and insurance.strip())
+
+def validate_provider(provider: str):
+    return bool(provider and provider.strip())
