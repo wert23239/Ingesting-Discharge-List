@@ -93,6 +93,7 @@ function FinalizedListPage() {
                 <td>
                   {/* Button to revert status to needs_review */}
                   <button
+                    className="button button-red"
                     onClick={() =>
                       handleSendBack(record.id, record.verified_by)
                     }

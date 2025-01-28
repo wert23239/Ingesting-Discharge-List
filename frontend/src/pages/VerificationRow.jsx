@@ -137,10 +137,16 @@ function VerificationRow({ record, currentVerifier, onUpdate }) {
       <td>
         {isEditing ? (
           <>
-            <button onClick={handleSave} style={{ marginRight: 4 }}>
+            <button
+              className="button button-green"
+              onClick={handleSave}
+              style={{ marginRight: 4 }}
+            >
               Save
             </button>
-            <button onClick={handleCancel}>Cancel</button>
+            <button className="button button-gray" onClick={handleCancel}>
+              Cancel
+            </button>
           </>
         ) : (
           <button onClick={() => setIsEditing(true)}>Edit</button>
