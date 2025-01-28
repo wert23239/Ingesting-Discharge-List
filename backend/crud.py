@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Record
+from db import Record
 import datetime
 from schemas import VerifyRequest
 

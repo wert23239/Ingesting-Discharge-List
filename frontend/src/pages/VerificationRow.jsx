@@ -9,6 +9,7 @@ function VerificationRow({ record, currentVerifier, onUpdate }) {
     epic_id: record.epic_id || record.EpicId || "",
     phone_number: record.phone_number || record.PhoneNumber || "",
     insurance: record.insurance || "",
+    provider: record.provider || "",
     status: record.status || "non-verified",
   });
 
@@ -26,6 +27,7 @@ function VerificationRow({ record, currentVerifier, onUpdate }) {
       epic_id: localData.epic_id,
       phone_number: localData.phone_number,
       insurance: localData.insurance,
+      provider: localData.provider,
       status: localData.status,
       verified_by: currentVerifier, // attach the current verifier
     };

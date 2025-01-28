@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from sqlalchemy.orm import Session
-from models import Record
+from db import Record
 import os
 import uuid
 import shutil
@@ -26,29 +26,27 @@ IS_LOCAL = os.getenv("IS_LOCAL", "true").lower() == "true"
 
 # CORS configuration
 # Allow the frontend (React) to communicate with the backend
+print("new stuff")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # React development server
-        "https://ingesting-discharge-list-1.onrender.com",  # Render Static Site
-    ],
+    allow_origins=["http://localhost:3006", "http://127.0.0.1:3006"],  # Frontend origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
 )
 
-# Serve React app during local development
-if IS_LOCAL:
-    print("Running in local development mode. Serving React app...")
-    app.mount(
-        "/static",
-        StaticFiles(directory=Path(__file__).parent.parent / "frontend" / "build" / "static"),
-        name="static",
-    )
+# # Serve React app during local development
+# if IS_LOCAL:
+#     print("Running in local development mode. Serving React app...")
+#     app.mount(
+#         "/static",
+#         StaticFiles(directory=Path(__file__).parent.parent / "frontend" / "build" / "static"),
+#         name="static",
+#     )
 
-    @app.get("/")
-    def serve_frontend():
-        return FileResponse(Path(__file__).parent.parent / "frontend" / "build" / "index.html")
+#     @app.get("/")
+#     def serve_frontend():
+#         return FileResponse(Path(__file__).parent.parent / "frontend" / "build" / "index.html")
 
 @app.get("/health")
 def health_check():
