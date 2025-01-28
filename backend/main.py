@@ -26,13 +26,17 @@ IS_LOCAL = os.getenv("IS_LOCAL", "true").lower() == "true"
 
 # CORS configuration
 # Allow the frontend (React) to communicate with the backend
-print("new stuff")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3006", "http://127.0.0.1:3006"],  # Frontend origins
+    allow_origins=[
+        "http://localhost:3006",  # React development server
+        "http://127.0.0.1:8000",
+        "http://127.0.0.1:3006",
+        "https://ingesting-discharge-list-1.onrender.com",  # Render Static Site
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # # Serve React app during local development
