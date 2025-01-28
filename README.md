@@ -18,6 +18,7 @@ The application provides:
 ## **Live Application**
 
 The application is live and accessible here:
+
 👉 [Ingesting Discharge List App](https://ingesting-discharge-list-1.onrender.com/)
 
 ---
@@ -25,6 +26,7 @@ The application is live and accessible here:
 ## **Design Document**
 
 For a detailed explanation of the architecture, design decisions, and workflows, refer to the design document:
+
 📄 [Design Document](https://docs.google.com/document/d/1nhuL_vduHr9ekGxw5Tr0ghj_DjLYjSbDRlF9epIF8io/edit?usp=sharing)
 
 ---
